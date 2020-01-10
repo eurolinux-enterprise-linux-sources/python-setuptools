@@ -4,7 +4,7 @@
 
 Name:           python-setuptools
 Version:        0.6.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -41,6 +41,12 @@ execute the software that requires pkg_resources.py.
 find -name '*.txt' | xargs chmod -x
 find -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python}|'
 
+# Pypi disabled http access, which will make easy_install fail when trying
+# to install a package from pypi, thus we have to change the hardcoded URL
+# in the code with the https equivalent.
+# See https://mail.python.org/pipermail/distutils-sig/2017-October/031712.html
+# Reported at: https://bugzilla.redhat.com/show_bug.cgi?id=1510444
+sed -i 's/http:\/\/pypi/https:\/\/pypi/g' setuptools/command/easy_install.py
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
@@ -75,6 +81,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 01 2017 Charalampos Stratakis <cstratak@redhat.com> - 0.6.10-4
+- Enable https access to pypi.
+Resolves: rhbz#1519849
+
 * Wed Jul 14 2010 David Malcolm <dmalcolm@redhat.com> - 0.6.10-3
 - cherrypick upstream patch for easy_install (ignore locally installed
 packages: patch0)
