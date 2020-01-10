@@ -1,3 +1,4 @@
-# ELS - Enterprise Linux/EuroLinux Sources - python-setuptools 
+# ELS - Enterprise Linux/EuroLinux Sources - python-setuptools
+ 
 ## Usage:
-  Checkout branch or tag.
+  Checkout branch or tag. Use `make sources` to recreate  SOURCE0 archive.
