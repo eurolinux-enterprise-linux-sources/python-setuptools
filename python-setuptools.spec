@@ -2,7 +2,7 @@
 
 Name:           python-setuptools
 Version:        0.9.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -68,6 +68,9 @@ LANG=en_US.utf8 %{__python} setup.py test
 %{_bindir}/easy_install-2.*
 
 %changelog
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.9.8-3
+- Mass rebuild 2013-12-27
+
 * Wed Sep 18 2013 Bohuslav Kabrda <bkabrda@redhat.com> - 0.9.8-2
 - Always use match_hostname function from backports-ssl_match_hostname.
 Resolves: rhbz#999863
