@@ -2,7 +2,7 @@
 
 Name:           python-setuptools
 Version:        0.9.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -13,6 +13,9 @@ Source1:        psfl.txt
 Source2:        zpl.txt
 
 Patch0:         python-setuptools-0.9.8-use-ssl-match-hostname-from-backports.patch
+
+# Restore proxy support in SSL connections
+Patch1:         restore-proxy-support-SSL-connection.patch
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
@@ -43,6 +46,7 @@ This package contains the distribute fork of setuptools.
 sed -i '1s|^#!python|#!%{__python}|' setuptools/command/easy_install.py
 
 %patch0 -p1
+%patch1 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
@@ -68,6 +72,14 @@ LANG=en_US.utf8 %{__python} setup.py test
 %{_bindir}/easy_install-2.*
 
 %changelog
+* Thu Aug 13 2015 Scientific Linux Auto Patch Process <SCIENTIFIC-LINUX-DEVEL@LISTSERV.FNAL.GOV>
+- Eliminated rpmbuild "bogus date" error due to inconsistent weekday,
+  by assuming the date is correct and changing the weekday.
+
+* Tue Jun 30 2015 Matej Stuchlik <mstuchli@redhat.com> - 0.9.8-4
+- Restore proxy support in SSL connections
+Resolves: rhbz#1121007
+
 * Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.9.8-3
 - Mass rebuild 2013-12-27
 
