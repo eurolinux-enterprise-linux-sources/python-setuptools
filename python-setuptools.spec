@@ -2,7 +2,7 @@
 
 Name:           python-setuptools
 Version:        0.9.8
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -17,6 +17,13 @@ Patch0:         python-setuptools-0.9.8-use-ssl-match-hostname-from-backports.pa
 # Restore proxy support in SSL connections
 Patch1:         restore-proxy-support-SSL-connection.patch
 
+# Fix path separator handling in build
+# Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=1388549
+Patch2:         work-properly-with-path-separators.patch
+
+# Fix easy_install in FIPS mode
+Patch3: easy_install-fips-mode.patch
+
 BuildArch:      noarch
 BuildRequires:  python2-devel
 BuildRequires:  python-backports-ssl_match_hostname
@@ -29,6 +36,9 @@ Obsoletes: python-setuptools-devel < 0.6.7-1
 
 # Provide this since some people will request distribute by name
 Provides: python-distribute = %{version}-%{release}
+
+# Provide the python2 namespace for the package
+Provides: python2-setuptools = %{version}-%{release}
 
 %description
 Setuptools is a collection of enhancements to the Python distutils that allow
@@ -47,6 +57,8 @@ sed -i '1s|^#!python|#!%{__python}|' setuptools/command/easy_install.py
 
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
@@ -72,9 +84,17 @@ LANG=en_US.utf8 %{__python} setup.py test
 %{_bindir}/easy_install-2.*
 
 %changelog
-* Thu Aug 13 2015 Scientific Linux Auto Patch Process <SCIENTIFIC-LINUX-DEVEL@LISTSERV.FNAL.GOV>
-- Eliminated rpmbuild "bogus date" error due to inconsistent weekday,
-  by assuming the date is correct and changing the weekday.
+* Wed Feb 15 2017 Charalampos Stratakis <cstratak@redhat.com> - 0.9.8-7
+- Fix easy_install in fips mode
+Resolves: rhbz#966970
+
+* Wed Feb 01 2017 Charalampos Stratakis <cstratak@redhat.com> - 0.9.8-6
+- Provide the python2-setuptools name
+Resolves: rhbz#1259474
+
+* Tue Oct 25 2016 Petr Vobornik <pvoborni@redhat.com> - 0.9.8-5
+- Fix path separator handling in build
+Resolves: rhbz#1388549
 
 * Tue Jun 30 2015 Matej Stuchlik <mstuchli@redhat.com> - 0.9.8-4
 - Restore proxy support in SSL connections

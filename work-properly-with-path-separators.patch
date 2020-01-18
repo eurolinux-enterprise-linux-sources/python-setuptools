@@ -1,0 +1,28 @@
+From 18f0d032b806f70dd1adbcab107dda875c61ba0b Mon Sep 17 00:00:00 2001
+From: Petr Vobornik <pvoborni@redhat.com>
+Date: Tue, 25 Oct 2016 16:23:45 +0200
+Subject: [PATCH] Work properly with path separators
+
+---
+ setuptools/command/build_py.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/setuptools/command/build_py.py b/setuptools/command/build_py.py
+index 8751acd493cf5c3c45022f29940ee2beda3bb6cd..0b5c3cfa994d21af2a03f2c50f1e5d166fe2bffc 100644
+--- a/setuptools/command/build_py.py
++++ b/setuptools/command/build_py.py
+@@ -120,7 +120,10 @@ class build_py(_build_py, Mixin2to3):
+             build_dir = os.path.join(*([self.build_lib] + package.split('.')))
+ 
+             # Length of path to strip from found files
+-            plen = len(src_dir)+1
++            plen = len(src_dir)
++            # Remove path seperator
++            if plen:
++                plen += 1
+ 
+             # Strip directory from globbed filenames
+             filenames = [
+-- 
+2.7.4
+
